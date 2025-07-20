@@ -8,6 +8,7 @@ router.get('/', schemeController.getSchemes);
 
 router.get('/:id', schemeController.getSchemeById);
 
+
 router.post('/', schemeController.createScheme);
 
 export default router;
