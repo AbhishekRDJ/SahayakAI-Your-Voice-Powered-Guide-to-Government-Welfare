@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Mic, MicOff, Volume2, Copy, Edit3, Check, X } from 'lucide-react';
+import colors from '../utils/colors';
 
 function TranscriptDisplay({
   transcript,
@@ -140,9 +141,9 @@ function TranscriptDisplay({
         </div>
 
         {/* Transcript Content */}
-        <div className={`relative bg-white rounded-2xl shadow-lg border-2 transition-all duration-300 ${isListening
-            ? 'border-red-200 bg-red-50'
-            : 'border-blue-200 hover:border-blue-300'
+        <div className={`relative bg-sahayak-light text-sahayak-blue3 border border-sahayak-blue2 rounded-lg px-4 py-2 shadow-sm transition-all duration-300 ${isListening
+          ? 'border-red-200 bg-red-50'
+          : 'border-blue-200 hover:border-blue-300'
           }`}>
           {/* Listening Animation */}
           {isListening && (

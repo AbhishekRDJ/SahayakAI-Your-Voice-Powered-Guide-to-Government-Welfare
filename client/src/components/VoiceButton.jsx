@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Mic, MicOff, Volume2, Zap, Loader2 } from 'lucide-react';
+import colors from '../utils/colors';
 
 function VoiceButton({
   onClick,
@@ -8,11 +9,9 @@ function VoiceButton({
   disabled = false,
   language = 'hi'
 }) {
-  const [isPressed, setIsPressed] = useState(false);
   const [ripples, setRipples] = useState([]);
   const [showTooltip, setShowTooltip] = useState(false);
 
-  // Create ripple effect
   const createRipple = (event) => {
     const button = event.currentTarget;
     const rect = button.getBoundingClientRect();
@@ -27,87 +26,50 @@ function VoiceButton({
       id: Date.now()
     };
 
-    setRipples(prev => [...prev, newRipple]);
+    setRipples((prev) => [...prev, newRipple]);
 
-    // Remove ripple after animation
     setTimeout(() => {
-      setRipples(prev => prev.filter(ripple => ripple.id !== newRipple.id));
+      setRipples((prev) => prev.filter((r) => r.id !== newRipple.id));
     }, 600);
   };
 
-  // Handle button click
   const handleClick = (event) => {
     if (!disabled && !loading) {
       createRipple(event);
-      setIsPressed(true);
-      setTimeout(() => setIsPressed(false), 150);
       onClick();
     }
   };
 
-  // Get button text based on state and language
   const getButtonText = () => {
-    if (loading) {
-      return language === 'hi' ? 'सुन रहा है...' : 'Listening...';
-    }
-    if (isListening) {
-      return language === 'hi' ? 'सुनना बंद करें' : 'Stop Listening';
-    }
+    if (loading) return language === 'hi' ? 'सुन रहा है...' : 'Listening...';
+    if (isListening) return language === 'hi' ? 'सुनना बंद करें' : 'Stop Listening';
     return language === 'hi' ? 'आवाज़ से पूछें' : 'Ask with Voice';
   };
 
-  // Get button icon based on state
   const getButtonIcon = () => {
-    if (loading) {
-      return <Loader2 className="w-6 h-6 animate-spin" />;
-    }
-    if (isListening) {
-      return <MicOff className="w-6 h-6" />;
-    }
+    if (loading) return <Loader2 className="w-6 h-6 animate-spin" />;
+    if (isListening) return <MicOff className="w-6 h-6" />;
     return <Mic className="w-6 h-6" />;
-  };
-
-  // Get button styling based on state
-  const getButtonStyling = () => {
-    if (disabled) {
-      return 'bg-gray-400 cursor-not-allowed';
-    }
-    if (loading || isListening) {
-      return 'bg-red-500 hover:bg-red-600 shadow-red-200';
-    }
-    return 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 shadow-blue-200';
   };
 
   return (
     <div className="flex flex-col items-center space-y-4 mt-6 mb-8">
-      {/* Main Voice Button */}
+      {/* Voice Button Container */}
       <div className="relative">
         <button
-          className={`
-            relative overflow-hidden
-            ${getButtonStyling()}
-            text-white font-semibold 
-            py-4 px-8 rounded-full 
-            shadow-lg hover:shadow-xl
-            focus:outline-none focus:ring-4 focus:ring-blue-300 focus:ring-opacity-50
-            transition-all duration-300 ease-in-out
-            transform hover:scale-105 active:scale-95
-            text-lg min-w-[200px]
-            ${isPressed ? 'scale-95' : ''}
-            ${loading || isListening ? 'animate-pulse' : ''}
-            disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none
-          `}
+          className={`glow-button text-sahayak-light font-bold py-3 px-6 rounded-full shadow-lg transition-all duration-300 ${loading ? 'opacity-60 cursor-not-allowed' : ''
+            }`}
           onClick={handleClick}
           onMouseEnter={() => setShowTooltip(true)}
           onMouseLeave={() => setShowTooltip(false)}
           aria-label={getButtonText()}
           disabled={disabled}
         >
-          {/* Ripple Effects */}
+          {/* Ripples */}
           {ripples.map((ripple) => (
             <span
               key={ripple.id}
-              className="absolute bg-white bg-opacity-30 rounded-full animate-ping"
+              className="absolute bg-white bg-opacity-30 rounded-full animate-ping pointer-events-none"
               style={{
                 left: ripple.x,
                 top: ripple.y,
@@ -118,24 +80,19 @@ function VoiceButton({
             />
           ))}
 
-          {/* Button Content */}
+          {/* Button Text */}
           <span className="z-10 relative flex justify-center items-center space-x-3">
             {getButtonIcon()}
             <span className="font-medium">{getButtonText()}</span>
           </span>
-
-          {/* Animated Background Glow */}
-          {(loading || isListening) && (
-            <div className="absolute inset-0 bg-gradient-to-r from-red-400 to-red-600 opacity-20 animate-pulse" />
-          )}
         </button>
 
-        {/* Listening Animation Rings */}
+        {/* Glowing Balls While Listening */}
         {isListening && (
-          <div className="absolute inset-0 flex justify-center items-center">
-            <div className="absolute border-4 border-red-400 border-opacity-30 rounded-full w-20 h-20 animate-ping animation-delay-0" />
-            <div className="absolute border-4 border-red-400 border-opacity-20 rounded-full w-24 h-24 animate-ping animation-delay-200" />
-            <div className="absolute border-4 border-red-400 border-opacity-10 rounded-full w-28 h-28 animate-ping animation-delay-400" />
+          <div className="z-0 absolute inset-0 flex justify-center items-center pointer-events-none">
+            <div className="animation-delay-0 glow-ball" />
+            <div className="animation-delay-200 glow-ball glow-ball-2" />
+            <div className="animation-delay-400 glow-ball glow-ball-3" />
           </div>
         )}
 
@@ -148,19 +105,28 @@ function VoiceButton({
         )}
       </div>
 
-      {/* Status Indicator */}
+      {/* Optional Status (Optional) */}
       <div className="flex items-center space-x-2 text-sm">
-        <div className={`w-3 h-3 rounded-full ${disabled ? 'bg-gray-400' :
-            loading || isListening ? 'bg-red-500 animate-pulse' : 'bg-green-500'
-          }`} />
+        <div
+          className={`w-3 h-3 rounded-full ${disabled
+            ? 'bg-gray-400'
+            : loading || isListening
+              ? 'bg-red-500 animate-pulse'
+              : 'bg-green-500'
+            }`}
+        />
         <span className="font-medium text-gray-600">
-          {disabled ? 'Microphone Unavailable' :
-            loading ? 'Processing...' :
-              isListening ? 'Listening for your voice' : 'Ready to listen'}
+          {disabled
+            ? 'Microphone Unavailable'
+            : loading
+              ? 'Processing...'
+              : isListening
+                ? 'Listening for your voice'
+                : 'Ready to listen'}
         </span>
       </div>
 
-      {/* Quick Actions */}
+      {/* Extra Info */}
       <div className="flex items-center space-x-4 text-gray-500 text-xs">
         <div className="flex items-center space-x-1">
           <Volume2 className="w-4 h-4" />
@@ -178,25 +144,64 @@ function VoiceButton({
         </div>
       </div>
 
-      {/* Voice Level Indicator */}
-      {isListening && (
-        <div className="flex items-center space-x-1 bg-white shadow-md px-4 py-2 border border-red-200 rounded-full">
-          <span className="mr-2 text-gray-600 text-sm">Voice Level:</span>
-          <div className="flex space-x-1">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div
-                key={i}
-                className={`w-1 h-6 rounded-full transition-all duration-200 ${i <= 3 ? 'bg-red-500 animate-pulse' : 'bg-gray-300'
-                  }`}
-                style={{ animationDelay: `${i * 0.1}s` }}
-              />
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Custom CSS for animations */}
+      {/* Styles */}
       <style jsx>{`
+        .glow-button {
+          background: linear-gradient(135deg, ${colors.blue1}, ${colors.blue2}, ${colors.blue3});
+          border: none;
+          color: ${colors.light};
+          position: relative;
+          overflow: hidden;
+        }
+
+        .glow-button:hover {
+          background: linear-gradient(135deg, ${colors.blue1}, ${colors.blue2}, ${colors.blue3});
+          box-shadow: 0 0 20px ${colors.blue1}, 0 0 30px ${colors.blue2}, 0 0 40px ${colors.blue3};
+        }
+
+        .glow-ball {
+          position: absolute;
+          width: 120px;
+          height: 120px;
+          border-radius: 50%;
+          border: 4px solid ${colors.blue1};
+          opacity: 0.3;
+          animation: ballPulse 2s infinite;
+        }
+
+        .glow-ball-2 {
+          width: 160px;
+          height: 160px;
+          border-color: ${colors.blue1};
+          animation-delay: 0.2s;
+        }
+
+        .glow-ball-3 {
+          width: 200px;
+          height: 200px;
+          border-color: ${colors.blue3};
+          animation-delay: 0.4s;
+        }
+
+        @keyframes ballPulse {
+          0% {
+            transform: scale(1);
+            opacity: 0.5;
+          }
+          50% {
+            transform: scale(1.2);
+            opacity: 0.3;
+          }
+          100% {
+            transform: scale(1);
+            opacity: 0.5;
+          }
+        }
+
+        .animate-fadeIn {
+          animation: fadeIn 0.3s ease-out;
+        }
+
         @keyframes fadeIn {
           from {
             opacity: 0;
@@ -207,49 +212,15 @@ function VoiceButton({
             transform: translateY(0);
           }
         }
-        
-        @keyframes ping {
-          0% {
-            transform: scale(1);
-            opacity: 1;
-          }
-          75%, 100% {
-            transform: scale(1.5);
-            opacity: 0;
-          }
-        }
-        
-        .animate-fadeIn {
-          animation: fadeIn 0.3s ease-out;
-        }
-        
-        .animate-ping {
-          animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
-        }
-        
+
         .animation-delay-0 {
           animation-delay: 0s;
         }
-        
         .animation-delay-200 {
           animation-delay: 0.2s;
         }
-        
         .animation-delay-400 {
           animation-delay: 0.4s;
-        }
-        
-        .animate-pulse {
-          animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-        
-        @keyframes pulse {
-          0%, 100% {
-            opacity: 1;
-          }
-          50% {
-            opacity: 0.8;
-          }
         }
       `}</style>
     </div>

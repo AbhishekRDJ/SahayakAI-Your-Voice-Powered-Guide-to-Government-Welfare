@@ -5,6 +5,15 @@ export const content = [
   "./src/**/*.{js,jsx,ts,tsx}"
 ];
 export const theme = {
-  extend: {},
+  extend: {
+    colors: {
+      sahayak: {
+        light: '#FFFBDE',
+        blue1: '#91C8E4',
+        blue2: '#749BC2',
+        blue3: '#4682A9',
+      },
+    },
+  },
 };
 export const plugins = []; 

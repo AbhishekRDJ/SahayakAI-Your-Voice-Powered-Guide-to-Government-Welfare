@@ -1,6 +1,6 @@
 function Footer() {
   return (
-    <footer className="w-full py-4 text-center text-xs text-gray-500 bg-white border-t mt-auto">
+    <footer className="bg-sahayak-blue3 py-2 w-full text-sahayak-light text-xs text-center">
       &copy; {new Date().getFullYear()} SahayakAI. Made for Social Welfare.
     </footer>
   );

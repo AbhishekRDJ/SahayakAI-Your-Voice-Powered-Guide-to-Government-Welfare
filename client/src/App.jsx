@@ -1,11 +1,13 @@
 
 import { useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import Header from './components/Header.jsx';
 import ChatBubbles from './components/ChatBubbles.jsx';
 import VoiceButton from './components/VoiceButton.jsx';
 import TranscriptDisplay from './components/TranscriptDisplay.jsx';
 import ErrorMessage from './components/ErrorMessage.jsx';
 import Footer from './components/Footer.jsx';
+import SahayakLanding from './components/LandingPage.jsx';
 import { useSpeech } from './hooks/useSpeech.js';
 import './App.css';
 
@@ -49,16 +51,21 @@ function App() {
   };
 
   return (
-    <div className="flex flex-col items-center bg-gradient-to-b from-blue-50 to-blue-200 min-h-screen font-sans">
-      <Header />
-      <main className="flex flex-col flex-1 items-center px-4 w-screen max-w-screen">
-        <ChatBubbles chat={chat} />
-        <TranscriptDisplay transcript={transcript} />
-        <ErrorMessage error={speechError} />
-        <VoiceButton onClick={startListening} loading={listening || fetching} />
-      </main>
-      <Footer />
-    </div>
+    <Routes>
+      <Route path="/" element={<SahayakLanding />} />
+      <Route path="/conversation" element={
+        <div className="flex flex-col items-center bg-sahayak-light min-h-screen font-sans">
+          <Header />
+          <main className="flex flex-col flex-1 items-center px-4 w-screen max-w-screen">
+            <ChatBubbles chat={chat} />
+            <TranscriptDisplay transcript={transcript} />
+            <ErrorMessage error={speechError} />
+            <VoiceButton onClick={startListening} loading={listening || fetching} />
+          </main>
+          <Footer />
+        </div>
+      } />
+    </Routes>
   );
 }
 
