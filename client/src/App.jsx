@@ -7,8 +7,10 @@ import VoiceButton from './components/VoiceButton.jsx';
 import TranscriptDisplay from './components/TranscriptDisplay.jsx';
 import ErrorMessage from './components/ErrorMessage.jsx';
 import Footer from './components/Footer.jsx';
-import SahayakLanding from './components/LandingPage.jsx';
+import SahayakLanding from './pages/LandingPage.jsx';
 import { useSpeech } from './hooks/useSpeech.js';
+import SchemeSearch from './pages/SchemeSearch.jsx'
+import SchemeDetails from './pages/SchemeDetails.jsx'
 import './App.css';
 
 function App() {
@@ -65,6 +67,8 @@ function App() {
           <Footer />
         </div>
       } />
+      <Route path="/schemes" element={<SchemeSearch />} />
+      <Route path="/schemes/:id" element={<SchemeDetails />} />
     </Routes>
   );
 }
