@@ -14,7 +14,7 @@ import SchemeDetails from './pages/SchemeDetails.jsx'
 import './App.css';
 
 function App() {
-  const [aiAnswer, setAiAnswer] = useState('');
+  const [setAiAnswer] = useState('');
   const [chat, setChat] = useState([]);
   const [fetching, setFetching] = useState(false);
 

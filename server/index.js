@@ -8,7 +8,13 @@ import schemeRoute from './routes/scheme.js';
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+app.use(cors({
+  origin: [
+    'https://sahayakai-mu.vercel.app ', // <-- replace with your actual Vercel domain
+    'http://localhost:5173' // <-- for local dev, if needed
+  ],
+  credentials: true // if you use cookies/auth
+}));
 app.use(express.json());
 
 mongoose.connect(process.env.MONGO_URI)
