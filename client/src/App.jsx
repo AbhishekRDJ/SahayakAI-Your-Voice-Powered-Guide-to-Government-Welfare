@@ -34,12 +34,12 @@ function App() {
     setAiAnswer('');
     setChat((prev) => [...prev, { type: 'user', text: question }]);
     try {
-      const res = await fetch('http://localhost:5000/api/ask', {
+      const res = await fetch('https://sahayakai-your-voice-powered-guide-to.onrender.com/api/ask', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        // credentials:'include', (for future if we implment auth)
         body: JSON.stringify({ question }),
       });
+
       if (!res.ok) throw new Error('Network response was not ok');
       const data = await res.json();
       setAiAnswer(data.answer);
