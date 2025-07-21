@@ -10,10 +10,10 @@ const PORT = process.env.PORT || 5000;
 
 app.use(cors({
   origin: [
-    'https://sahayakai-mu.vercel.app ', // <-- replace with your actual Vercel domain
-    'http://localhost:5173' // <-- for local dev, if needed
+    'https://sahayakai-mu.vercel.app/ ',
+    'http://localhost:5173'
   ],
-  credentials: true // if you use cookies/auth
+  credentials: true
 }));
 app.use(express.json());
 
