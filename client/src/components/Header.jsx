@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Globe, Settings, Menu, X } from 'lucide-react';
 import colors from '../utils/colors';
+// import Navigation from './Navigation'
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -14,7 +15,8 @@ function Header() {
     { code: 'bn', name: 'Bengali', native: 'বাংলা' }
   ];
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-  return (
+  return (<>
+    {/* <Navigation /> */}
     <header style={{ background: `linear-gradient(180deg, ${colors.blue1}, ${colors.light}, ${colors.white})` }} className="py-4 w-full overflow-hidden" >
       <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         <div className="flex justify-between items-center py-4">
@@ -111,6 +113,7 @@ function Header() {
         )}
       </div>
     </header>
+  </>
   );
 }
 

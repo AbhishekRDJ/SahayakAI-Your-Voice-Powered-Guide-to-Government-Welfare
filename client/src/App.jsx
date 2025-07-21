@@ -11,14 +11,14 @@ import SahayakLanding from './pages/LandingPage.jsx';
 import { useSpeech } from './hooks/useSpeech.js';
 import SchemeSearch from './pages/SchemeSearch.jsx'
 import SchemeDetails from './pages/SchemeDetails.jsx'
+import Navigation from './components/Navigation.jsx'
 import './App.css';
 
 function App() {
-  const [setAiAnswer] = useState('');
+  const [aiAnswer, setAiAnswer] = useState('');
   const [chat, setChat] = useState([]);
   const [fetching, setFetching] = useState(false);
 
-  // useSpeech hook for voice recognition and synthesis
   const {
     startListening,
     transcript,
@@ -30,12 +30,19 @@ function App() {
   });
 
   const handleSubmit = async (question) => {
+    const timestamp = Date.now();
     setFetching(true);
     setAiAnswer('');
-    setChat((prev) => [...prev, { type: 'user', text: question }]);
+    setChat((prev) => [
+      ...prev,
+      { type: 'user', text: question, status: 'sent', timestamp },
+      { type: 'ai', text: '', status: 'pending', timestamp: Date.now() }
+    ]);
+    let answer = '';
+
     try {
-      const res = await fetch('https://sahayakai-your-voice-powered-guide-to.onrender.com/api/ask', {
-        // const res = await fetch('https://localhost:5000/api/ask', {
+      // const res = await fetch('https://sahayakai-your-voice-powered-guide-to.onrender.com/api/ask', {
+      const res = await fetch('http://localhost:5000/api/ask', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ question }),
@@ -43,11 +50,38 @@ function App() {
 
       if (!res.ok) throw new Error('Network response was not ok');
       const data = await res.json();
-      setAiAnswer(data.answer);
-      setChat((prev) => [...prev, { type: 'ai', text: data.answer }]);
-      speakAnswer(data.answer);
+      answer = data.answer;
+      setAiAnswer(answer);
+      setChat((prev) => {
+        const updated = [...prev];
+        // Find last AI message with status 'pending'
+        const idx = updated.map((m, i) => ({ ...m, i })).reverse().find(m => m.type === 'ai' && m.status === 'pending')?.i;
+        if (idx !== undefined) {
+          updated[idx] = {
+            ...updated[idx],
+            text: answer,
+            status: 'delivered',
+            timestamp: Date.now()
+          };
+        }
+        return updated;
+      });
+      speakAnswer(answer);
     } catch (err) {
-      setChat((prev) => [...prev, { type: 'ai', text: 'Failed to get answer. Please try again.' }]);
+      setChat((prev) => {
+        const updated = [...prev];
+        const idx = updated.map((m, i) => ({ ...m, i })).reverse().find(m => m.type === 'ai' && m.status === 'pending')?.i;
+        if (idx !== undefined) {
+          updated[idx] = {
+            ...updated[idx],
+            text: 'Failed to get answer. Please try again.',
+            status: 'error',
+            timestamp: Date.now()
+          };
+        }
+        return updated;
+      });
+
     } finally {
       setFetching(false);
     }
@@ -58,6 +92,7 @@ function App() {
       <Route path="/" element={<SahayakLanding />} />
       <Route path="/conversation" element={
         <div className="flex flex-col items-center bg-sahayak-light min-h-screen font-sans">
+
           <Header />
           <main className="flex flex-col flex-1 items-center px-4 w-screen max-w-screen">
             <ChatBubbles chat={chat} />

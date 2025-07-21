@@ -1,21 +1,25 @@
-import axios from 'axios';
+import { GoogleGenerativeAI } from '@google/generative-ai';
+import dotenv from 'dotenv';
 
-async function askOmniDimension(question) {
-  const OMNI_API_KEY = process.env.OMNIDIM_API_KEY;
-  const OMNI_AGENT_ID = process.env.OMNIDIM_AGENT_ID;
-  const OMNI_API_URL = `https://api.omnidim.io/v1/agents/${OMNI_AGENT_ID}/interact`;
+dotenv.config();
 
-  const response = await axios.post(
-    OMNI_API_URL,
-    { input: question },
-    {
-      headers: {
-        Authorization: `Bearer ${OMNI_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-    }
-  );
-  return response.data?.output || 'No answer received.';
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+
+async function askGemini(question) {
+  try {
+    const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+
+    const result = await model.generateContent(question);
+    const response = await result.response;
+    const text = response.text();
+
+    console.log('Gemini response:', text);
+    return text;
+  } catch (error) {
+    console.error('Gemini API error:', error.message);
+    throw error;
+  }
 }
 
 export async function askController(req, res) {
@@ -23,11 +27,11 @@ export async function askController(req, res) {
   if (!question) {
     return res.status(400).json({ error: 'Missing question in request body.' });
   }
+
   try {
-    const answer = await askOmniDimension(question);
+    const answer = await askGemini(question);
     res.json({ answer });
   } catch (error) {
-    console.error('Error calling OmniDimension API:', error.response?.data || error.message);
-    res.status(500).json({ error: 'Failed to get answer from AI agent.' });
+    res.status(500).json({ error: 'Failed to get answer from Gemini AI.' });
   }
-} 
+}

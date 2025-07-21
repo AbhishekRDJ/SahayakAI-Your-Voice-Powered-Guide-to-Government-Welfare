@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Search, FileText, Users, Calendar, Loader2 } from 'lucide-react';
 import { fetchSchemes } from '../data/schemes'
 import { useNavigate } from 'react-router-dom';
+import Navigation from '../components/Navigation'
 
 
 export default function SchemeSearch() {
@@ -67,9 +68,10 @@ export default function SchemeSearch() {
     );
   }
 
-  return (
-    <div className="bg-[#FFFBDE] px-4 py-12 min-h-screen">
-      {/* Header */}
+  return (<>
+    <Navigation />
+    <div className="bg-[#FFFBDE] mt-10 px-4 py-12 min-h-screen">
+
       <div className="mb-10 text-center">
         <h1 className="mb-4 font-bold text-[#4682A9] text-4xl">Search Government Schemes</h1>
         <p className="mx-auto max-w-2xl text-[#749BC2] text-lg">
@@ -77,7 +79,6 @@ export default function SchemeSearch() {
         </p>
       </div>
 
-      {/* Search Section */}
       <div className="mx-auto mb-8 max-w-4xl">
         <div className="relative mb-6">
           <Search className="top-1/2 left-4 absolute w-5 h-5 text-[#749BC2] -translate-y-1/2 transform" />
@@ -90,7 +91,6 @@ export default function SchemeSearch() {
           />
         </div>
 
-        {/* Category Filter */}
         <div className="flex flex-wrap justify-center gap-2">
           {categories.map((category) => (
             <button
@@ -107,7 +107,6 @@ export default function SchemeSearch() {
         </div>
       </div>
 
-      {/* Results Counter */}
       <div className="mx-auto mb-6 max-w-3xl">
         <p className="text-[#749BC2] text-center">
           {filteredSchemes.length === 0 ? 'No schemes found' :
@@ -115,7 +114,6 @@ export default function SchemeSearch() {
         </p>
       </div>
 
-      {/* Schemes List */}
       <div className="space-y-6 mx-auto max-w-3xl">
         {filteredSchemes.length === 0 ? (
           <div className="py-12 text-center">
@@ -160,7 +158,6 @@ export default function SchemeSearch() {
         )}
       </div>
 
-      {/* Footer Stats */}
       {schemes.length > 0 && (
         <div className="mt-16 text-center">
           <div className="bg-white/60 backdrop-blur-sm mx-auto p-6 border border-[#91C8E4]/20 rounded-xl max-w-md">
@@ -173,5 +170,6 @@ export default function SchemeSearch() {
         </div>
       )}
     </div>
+  </>
   );
 }
