@@ -35,6 +35,7 @@ function App() {
     setChat((prev) => [...prev, { type: 'user', text: question }]);
     try {
       const res = await fetch('https://sahayakai-your-voice-powered-guide-to.onrender.com/api/ask', {
+        // const res = await fetch('https://localhost:5000/api/ask', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ question }),
