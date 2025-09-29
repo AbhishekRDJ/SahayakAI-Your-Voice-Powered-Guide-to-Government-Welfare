@@ -1,1 +1,47 @@
 node_modules/ 
+.env
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*# Diagnostic reports (https://nodejs.org/api/report.html)
+.report/
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# IDEs and other development tools
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+.directory
+
+# Virtual environments
+.venv/
+venv/
+env/
